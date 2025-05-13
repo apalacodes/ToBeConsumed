@@ -1,0 +1,249 @@
+/* ====== GLOBAL ====== */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #7199e9;
+    color: #000000; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    overflow-x: hidden;
+    animation: fadeIn 2s ease-in-out;
+    padding-top: 80px;
+    padding-right: 30px;
+    overflow-y: auto;
+}
+/* ====== ANIMATIONS ====== */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideIn {
+    0% { transform: translateY(-50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes shinein {
+    0% { transform: translateX(-50px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInTop {
+    from { opacity: 0; transform: translateY(-40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* ====== NAVBAR ====== */
+nav.navbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1rem 2rem;
+    background-color: white;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.logo-icon {
+    margin-right: 8px;
+    font-size: 1.8rem;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-right: 50px;
+
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #105471;
+    font-weight: 500;
+    transition: color 0.3s;
+    margin-right: 50px;
+
+}
+
+.nav-links a:hover {
+    color: #712510;
+    background-color: rgba(184, 222, 255, 0.648);
+
+}
+    
+/* ------------------------------------------ */
+
+ .dropdown {
+  position: relative;
+
+}
+
+.dropdown > a {
+  position: relative;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+  padding: 2px 0;
+  min-width: 150px;
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.dropdown-menu a {
+  padding: 2px 16px;
+  min-width: 120px;
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: flex;
+}
+/* ------------------------------------------- */
+.btn-outline, .btn-solid {
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-outline {
+    background-color: #ffffff;
+    border: 2px solid #153574;
+    color: #040b1a;
+}
+
+.btn-outline:hover {
+    background-color: #93b2e0;
+}
+
+.btn-solid {
+    background-color: #5a8bd4;
+    color: white;
+}
+
+.btn-solid:hover {
+    background-color: #a2bee8;
+}
+
+/* ====== HERO ====== */
+.hero {
+    text-align: center;
+    padding: 60px 20px 40px 20px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #222;
+    animation: slideIn 1s ease-out;
+}
+
+.hero .highlight {
+    color: #222;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+/* ====== FEATURES ====== */
+.features {
+    text-align: center;
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+}
+
+.features h2 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 15px;
+    animation: shinein 1s ease-out 1s forwards;
+}
+
+.features ul {
+    list-style: none;
+    padding: 0;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.features li {
+    margin: 10px 0;
+}
+
+/* ====== CTA SECTION ====== */
+.cta {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 600px;
+}
+
+.cta h2 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.cta p {
+    color: #f2f2f2;
+}
+
+/* ====== ILLUSTRATION ====== */
+.illustration {
+    margin-top: 30px;
+}
+
+.illustration img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
