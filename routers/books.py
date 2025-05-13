@@ -1,68 +1,32 @@
 
 from fastapi import APIRouter, HTTPException
 from schemas import Book
+from typing import List
 
-router= APIRouter()
+router = APIRouter()
+books = []
 
-bookl=[]
+@router.get("/api/books", response_model=List[Book])
+def get_books():
+    return books
 
-@router.get("/")
-def get_book():
-    return bookl
-
-@router.post("/")
+@router.post("/api/books")
 def add_book(book: Book):
-    bookl.append(book)
+    books.append(book)
     return book
 
-@router.get("/{title}")
-def get_book(title: str):
-    for book in bookl:
+@router.put("/api/books/{title}")
+def mark_as_read(title: str):
+    for book in books:
         if book.title.lower() == title.lower():
-            return book
+            book.read = True  
+            return {"message": "Book marked as read"}
     raise HTTPException(status_code=404, detail="Book not found")
 
-# from fastapi import APIRouter, HTTPException
-# from schemas import Book
-
-# router = APIRouter()
-
-# book_list = []
-
-# @router.get("/")
-# def get_books():
-#     return [
-#         {
-#             "title": book.title,
-#             "author": book.author,
-#             "status": "Read" if book.read else "To be read"
-#         }
-#         for book in book_list
-#     ]
-
-# @router.post("/")
-# def add_book(book: Book):
-#     for b in book_list:
-#         if b.title.lower() == book.title.lower():
-#             raise HTTPException(status_code=400, detail="Book already in the list.")
-#     book_list.append(book)
-#     return {"message": "Book added to the list", "book": book}
-
-# @router.get("/{title}")
-# def get_book(title: str):
-#     for book in book_list:
-#         if book.title.lower() == title.lower():
-#             return {
-#                 "title": book.title,
-#                 "author": book.author,
-#                 "status": "Read" if book.read else "To be read"
-#             }
-#     raise HTTPException(status_code=404, detail="Book not found")
-
-# @router.delete("/{title}")
-# def remove_book(title: str):
-#     for i, book in enumerate(book_list):
-#         if book.title.lower() == title.lower():
-#             removed = book_list.pop(i)
-#             return {"message": "Book removed from the list", "book": removed}
-#     raise HTTPException(status_code=404, detail="Book not found")
+@router.delete("/api/books/{title}")
+def delete_book(title: str):
+    for i, book in enumerate(books):
+        if book.title.lower() == title.lower():
+            del books[i]
+            return {"message": "Book deleted"}
+    raise HTTPException(status_code=404, detail="Book not found")

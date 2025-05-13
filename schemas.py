@@ -5,19 +5,19 @@ class Book(BaseModel):
     author: str
     year: int
     genre: str
-    is_read: bool = False
+    read: bool = False
 
 class Movie(BaseModel):
     title: str
     director: str
     year: int
     genre: str
-    is_watched: bool = False
+    watched: bool = False
 
-class Show(BaseModel):
-    title: str
-    creator: str
-    year: int
-    genre: str
-    Season: int
-    is_watched: bool = False
+# class Show(BaseModel):
+#     title: str
+#     creator: str
+#     year: int
+#     genre: str
+#     Season: int
+#     is_watched: bool = False
