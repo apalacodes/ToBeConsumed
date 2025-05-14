@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Archived Books | ToBeConsumed</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-icon">📚</span>
+      <span class="logo-text">ToBeConsumed</span>
+    </div>
+    <div class="nav-links">
+      <div class="dropdown">
+        <a href="#">Books</a>
+        <div class="dropdown-menu">
+          <a href="/to_be_read">To-be-read List</a>
+          <a href="/rbooks"> Read List</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Movies</a>
+        <div class="dropdown-menu">
+          <a href="/to_be_watched">To-watch List</a>
+          <a href="/wmovies">Watched List</a>
+        </div>
+      </div>
+      <a href="/archives">Archive</a>
+      <button class="btn-outline">Login</button>
+      <button class="btn-solid">Sign Up</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1>📦 Archived Books</h1>
+    <ul id="archive-list"></ul>
+  </main>
+
+   <script>
+    async function fetchArchivedBooks() {
+      try {
+        const res = await fetch("/archive/api/books");
+        const data = await res.json();
+        const list = document.getElementById("archive-list");
+
+        if (data.length === 0) {
+          list.innerHTML = "<li>No archived books yet.</li>";
+          return;
+        }
+
+        data.forEach(book => {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${book.title}</strong> by ${book.author} (Archived at: ${new Date(book.archived_at).toLocaleString()})`;
+          list.appendChild(li);
+        });
+      } catch (error) {
+        console.error("Error fetching archive:", error);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", fetchArchivedBooks);
+  </script>
+</body>
+</html> 

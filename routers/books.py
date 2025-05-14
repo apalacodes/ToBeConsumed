@@ -1,7 +1,12 @@
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException , Request
 from schemas import Book
 from typing import List
+
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="templates")
 
 router = APIRouter()
 books = []
@@ -30,3 +35,10 @@ def delete_book(title: str):
             del books[i]
             return {"message": "Book deleted"}
     raise HTTPException(status_code=404, detail="Book not found")
+
+@router.get("/to_be_read", response_class=HTMLResponse)
+async def to_be_read_page(request: Request):
+    return templates.TemplateResponse("to_be_read.html", {
+        "request": request,
+        "books": books
+    })

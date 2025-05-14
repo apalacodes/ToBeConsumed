@@ -1,0 +1,172 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard | ToBeConsumed</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-icon">📚</span>
+      <span class="logo-text">ToBeConsumed</span>
+    </div>
+    <div class="nav-links">
+      <div class="dropdown">
+        <a href="#">Books</a>
+        <div class="dropdown-menu">
+          <a href="/to_be_read">To-be-read List</a>
+          <a href="/rbooks"> Read List</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Movies</a>
+        <div class="dropdown-menu">
+          <a href="/to_be_watched">To-watch List</a>
+          <a href="/wmovies">Watched List</a>
+        </div>
+      </div>
+      <a href="/archives">Archive</a>
+      <button class="btn-outline">Login</button>
+      <button class="btn-solid">Sign Up</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1>📖 To-Be-Watched List</h1>
+
+    <section class="form-section">
+      <h2>Add a Movie</h2>
+      <form id="add-movie-form">
+        <input type="text" id="title" placeholder="Movie Title *" required>
+        <input type="text" id="director" placeholder="Director *" required>
+        <input type="text" id="genre" placeholder="Genre (optional)">
+        <input type="number" id="year" placeholder="Year (optional)">
+        <button type="submit" class="btn-solid">Add</button>
+      </form>
+    </section>
+
+    <section class="movie-list">
+      <h2>To Be Watched</h2>
+      <ul id="movie-list">
+        
+      </ul>
+    </section>
+  </main>
+
+
+  <script>
+  async function fetchMovies() {
+    try {
+      const res = await fetch("/movies/api/movies");
+      const data = await res.json();
+      const listContainer = document.getElementById("book-list");
+
+      listContainer.innerHTML = "";
+        
+      const toBeWatched = data.filter(movie => !movie.watched);
+
+      if (toBeWatched.length === 0) {
+        listContainer.innerHTML = "<li>No movies added yet!</li>";
+      } else {
+        toBeWatched.forEach(movie => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <span class="movie-text"><strong>${movie.title}</strong> directed by ${movie.director}</span>
+            <button class="mark-watched" onclick="markAsWatched('${movie.title}', this)">✔️</button>
+            <button class="delete-movie" onclick="deleteMovie('${movie.title}', this)">🗑️</button>`;
+          listContainer.appendChild(li);
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch movies:", error);
+    }
+  }
+
+  document.getElementById("add-movie-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById("title").value;
+    const director = document.getElementById("director").value;
+    const genre = document.getElementById("genre").value || "Unknown";
+    const year = parseInt(document.getElementById("year").value) || 0;
+
+    const movie = {
+      title,
+      director,
+      genre,
+      year,
+      watched: false
+    };
+
+    try {
+      await fetch("/movies/api/movies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(movie)
+      });
+
+      e.target.reset();
+    //   fetchMovies();
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <span class="movie-text"><strong>${movie.title}</strong> directed by ${movie.director}</span>
+      <button class="mark-watched" onclick="markAsWatched('${movie.title}', this)">✔️</button>
+      <button class="delete-movie" onclick="deleteMovie('${movie.title}', this)">🗑️</button>
+    `;
+    document.getElementById("movie-list").appendChild(li);
+
+
+    } catch (err) {
+      console.error("Error adding movie:", err);
+    }
+  });
+
+  async function markAsWatched(title, btn) {
+    try {
+      await fetch(`/movies/api/movies/${encodeURIComponent(title)}`, {
+        method: "PUT"
+      });
+      const movieText = btn.parentElement.querySelector(".movie-text");
+      movieText.style.textDecoration = "line-through";
+      btn.disabled = true;
+    } catch (error) {
+      console.error("Failed to mark movie as watched:", error);
+    }
+  }
+
+async function deleteMovie(title, btn) {
+  try {
+    // Find the movie details from DOM (for archiving)
+    const movieText = btn.parentElement.querySelector(".movie-text").innerText;
+    const [movieTitle, byDirector] = movieText.split(" directed by ");
+    const director = byDirector.trim();
+
+    // Archive the movie first
+    await fetch("/archive/api/movies", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: movieTitle.trim(),
+        director: director,
+        archived_at: new Date().toISOString()  // Optional
+      })
+    });
+
+    // Then delete the movie
+    await fetch(`/movies/api/movies/${encodeURIComponent(title)}`, {
+      method: "DELETE"
+    });
+
+    btn.parentElement.remove(); // remove from DOM
+  } catch (error) {
+    console.error("Failed to delete and archive movie:", error);
+  }
+}
+
+  window.addEventListener("DOMContentLoaded", fetchMovies);
+</script>
+
+</body>
+</html> -->

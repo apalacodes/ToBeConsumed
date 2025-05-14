@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard | ToBeConsumed</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-icon">📚</span>
+      <span class="logo-text">ToBeConsumed</span>
+    </div>
+    <div class="nav-links">
+      <div class="dropdown">
+        <a href="#">Books</a>
+        <div class="dropdown-menu">
+          <a href="/to_be_read">To-be-read List</a>
+          <a href="/rbooks"> Read List</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#">Movies</a>
+        <div class="dropdown-menu">
+          <a href="/to_be_watched">To-watch List</a>
+          <a href="/wmovies">Watched List</a>
+        </div>
+      </div>
+      <a href="/archives">Archive</a>
+      <button class="btn-outline">Login</button>
+      <button class="btn-solid">Sign Up</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1>📖 To-Be-Read List</h1>
+
+    <section class="form-section">
+      <h2>Add a Book</h2>
+      <form id="add-book-form">
+        <input type="text" id="title" placeholder="Book Title *" required>
+        <input type="text" id="author" placeholder="Author *" required>
+        <input type="text" id="genre" placeholder="Genre (optional)">
+        <input type="number" id="year" placeholder="Year (optional)">
+        <button type="submit" class="btn-solid">Add</button>
+      </form>
+    </section>
+
+    <section class="book-list">
+      <h2>To Be Read</h2>
+      <ul id="book-list">
+        <!-- JS populate -->
+      </ul>
+    </section>
+  </main>
+
+
+  <!-- <script>
+  async function fetchBooks() {
+    try {
+      const res = await fetch("/books/api/books");
+      const data = await res.json();
+      const listContainer = document.getElementById("book-list");
+    if (data.length === 0) {
+      listContainer.innerHTML = "<li>No books added yet!</li>";
+    } else {
+      listContainer.innerHTML = "";  // Clear only when data is not empty
+      const toBeRead = data.filter(book => !book.read);
+
+      if (toBeRead.length === 0) {
+        listContainer.innerHTML = "<li>No books to be read!</li>";
+      } else {
+        toBeRead.forEach(book => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <span class="book-text"><strong>${book.title}</strong> by ${book.author}</span>
+            <button class="mark-read" onclick="markAsRead('${book.title}', this)">✔️</button>
+            <button class="delete-book" onclick="deleteBook('${book.title}', this)">🗑️</button>`;
+          listContainer.appendChild(li);
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch books:", error);
+  }
+}
+
+async function addBookToList(book) {
+  const listContainer = document.getElementById("book-list");
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <span class="book-text"><strong>${book.title}</strong> by ${book.author}</span>
+    <button class="mark-read" onclick="markAsRead('${book.title}', this)">✔️</button>
+    <button class="delete-book" onclick="deleteBook('${book.title}', this)">🗑️</button>`;
+  listContainer.appendChild(li);
+}
+
+document.getElementById("add-book-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const title = document.getElementById("title").value;
+  const author = document.getElementById("author").value;
+  const genre = document.getElementById("genre").value || "Unknown";
+  const year = parseInt(document.getElementById("year").value) || 0;
+
+  const book = {
+    title,
+    author,
+    genre,
+    year,
+    read: false
+  };
+
+  try {
+    // Send the book to the server
+    await fetch("/books/api/books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(book)
+    });
+
+
+      e.target.reset();
+    //   fetchBooks();
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <span class="book-text"><strong>${book.title}</strong> by ${book.author}</span>
+      <button class="mark-read" onclick="markAsRead('${book.title}', this)">✔️</button>
+      <button class="delete-book" onclick="deleteBook('${book.title}', this)">🗑️</button>
+    `;
+    document.getElementById("book-list").appendChild(li);
+
+
+    } catch (err) {
+      console.error("Error adding book:", err);
+    }
+  });
+
+  async function markAsRead(title, btn) {
+    try {
+      await fetch(`/books/api/books/${encodeURIComponent(title)}`, {
+        method: "PUT"
+      });
+      const bookText = btn.parentElement.querySelector(".book-text");
+      bookText.style.textDecoration = "line-through";
+      btn.disabled = true;
+    } catch (error) {
+      console.error("Failed to mark book as read:", error);
+    }
+  }
+
+async function deleteBook(title, btn) {
+  try {
+    // Find the book details from DOM (for archiving)
+    const bookText = btn.parentElement.querySelector(".book-text").innerText;
+    const [bookTitle, byAuthor] = bookText.split(" by ");
+    const author = byAuthor.trim();
+
+    // Archive the book first
+    await fetch("/archive/api/books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: bookTitle.trim(),
+        author: author,
+        archived_at: new Date().toISOString()  // Optional
+      })
+    });
+
+    // Then delete the book
+    await fetch(`/books/api/books/${encodeURIComponent(title)}`, {
+      method: "DELETE"
+    });
+
+    btn.parentElement.remove(); // remove from DOM
+  } catch (error) {
+    console.error("Failed to delete and archive book:", error);
+  }
+}
+
+  window.addEventListener("DOMContentLoaded", fetchBooks);
+</script> -->
+<script>
+async function fetchBooks() {
+  try {
+    const res = await fetch("/books/api/books");
+    const data = await res.json();
+    renderBookList(data);
+  } catch (error) {
+    console.error("Failed to fetch books:", error);
+  }
+}
+
+function renderBookList(data) {
+  const listContainer = document.getElementById("book-list");
+  listContainer.innerHTML = "";  // Clear list first
+
+  const toBeRead = data.filter(book => !book.read);
+
+  if (toBeRead.length === 0) {
+    listContainer.innerHTML = "<li id='placeholder'>No books to be read!</li>";
+  } else {
+    toBeRead.forEach(book => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <span class="book-text"><strong>${book.title}</strong> by ${book.author}</span>
+        <button class="mark-read" onclick="markAsRead('${book.title}', this)">✔️</button>
+        <button class="delete-book" onclick="deleteBook('${book.title}', this)">🗑️</button>
+      `;
+      listContainer.appendChild(li);
+    });
+  }
+}
+
+document.getElementById("add-book-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const title = document.getElementById("title").value.trim();
+  const author = document.getElementById("author").value.trim();
+  const genre = document.getElementById("genre").value || "Unknown";
+  const year = parseInt(document.getElementById("year").value) || 0;
+
+  if (!title || !author) return;
+
+  const book = {
+    title,
+    author,
+    genre,
+    year,
+    read: false
+  };
+
+  try {
+    const res = await fetch("/books/api/books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(book)
+    });
+
+    if (res.ok) {
+      e.target.reset();
+      fetchBooks();  // Refresh list to reflect the added book
+    }
+  } catch (err) {
+    console.error("Error adding book:", err);
+  }
+});
+
+async function markAsRead(title, btn) {
+  try {
+    await fetch(`/books/api/books/${encodeURIComponent(title)}`, {
+      method: "PUT"
+    });
+
+    const bookText = btn.parentElement.querySelector(".book-text");
+    bookText.style.textDecoration = "line-through";
+    btn.disabled = true; // disable after marking as read
+  } catch (error) {
+    console.error("Failed to mark book as read:", error);
+  }
+}
+async function deleteBook(title, btn) {
+  try {
+    const bookText = btn.parentElement.querySelector(".book-text").innerText;
+    const [bookTitle, byAuthor] = bookText.split(" by ");
+    const author = byAuthor.trim();
+
+    await fetch("/archive/api/books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: bookTitle.trim(),
+        author: author,
+        archived_at: new Date().toISOString()
+      })
+    });
+
+    await fetch(`/books/api/books/${encodeURIComponent(title)}`, {
+      method: "DELETE"
+    });
+
+    fetchBooks();  // Refresh list after deletion
+  } catch (error) {
+    console.error("Failed to delete and archive book:", error);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", fetchBooks);
+</script>
+</body>
+</html>

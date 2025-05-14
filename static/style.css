@@ -247,3 +247,17 @@ nav.navbar {
     border-radius: 10px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
+
+
+.mark-read, .delete-book {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.book-text.strikethrough {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
