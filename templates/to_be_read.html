@@ -260,12 +260,85 @@ async function markAsRead(title, btn) {
     console.error("Failed to mark book as read:", error);
   }
 }
+// hello
+// async function deleteBook(title, btn) {
+//   try {
+//     const bookText = btn.parentElement.querySelector(".book-text").innerText;
+//     const [bookTitle, byAuthor] = bookText.split(" by ");
+//     const author = byAuthor.trim();
+
+//     await fetch("/archive/api/books", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         title: bookTitle.trim(),
+//         author: author,
+//         archived_at: new Date().toISOString()
+//       })
+//     });
+
+//     await fetch(`/books/api/books/${encodeURIComponent(title)}`, {
+
+//       method: "DELETE"
+//     });
+
+//     fetchBooks();  // Refresh list after deletion
+//   } catch (error) {
+//     console.error("Failed to delete and archive book:", error);
+//   }
+// }
+
+// window.addEventListener("DOMContentLoaded", fetchBooks);
+// 
+// <script>
+
+async function deleteBook(title, btn) {
+  try {
+    // Get book details from the DOM
+    const bookElement = btn.parentElement;
+    const bookText = bookElement.querySelector(".book-text").innerText;
+    const [bookTitle, byAuthor] = bookText.split(" by ");
+    const author = byAuthor.trim();
+
+    // First archive the book
+    const archiveResponse = await fetch("/archive/api/books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: bookTitle.trim(),
+        author: author,
+        archived_at: new Date().toISOString()
+      })
+    });
+
+    if (!archiveResponse.ok) {
+      throw new Error("Failed to archive book");
+    }
+
+    // Then delete from active books list
+    const deleteResponse = await fetch(`/books/api/books/${encodeURIComponent(title)}`, {
+      method: "DELETE"
+    });
+
+    if (!deleteResponse.ok) {
+      throw new Error("Failed to delete book");
+    }
+
+    // Only remove from DOM if both operations succeeded
+    fetchBooks(); // Refresh the book list
+  } catch (error) {
+    console.error("Failed to delete and archive book:", error);
+    alert("Failed to delete and archive book. Please try again.");
+  }
+}
+
 async function deleteBook(title, btn) {
   try {
     const bookText = btn.parentElement.querySelector(".book-text").innerText;
     const [bookTitle, byAuthor] = bookText.split(" by ");
     const author = byAuthor.trim();
 
+    // First archive the book
     await fetch("/archive/api/books", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -276,6 +349,7 @@ async function deleteBook(title, btn) {
       })
     });
 
+    // Then delete from active books
     await fetch(`/books/api/books/${encodeURIComponent(title)}`, {
       method: "DELETE"
     });
@@ -285,7 +359,6 @@ async function deleteBook(title, btn) {
     console.error("Failed to delete and archive book:", error);
   }
 }
-
 window.addEventListener("DOMContentLoaded", fetchBooks);
 </script>
 </body>

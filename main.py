@@ -1,5 +1,5 @@
 from fastapi import FastAPI , Request
-from routers import books 
+from routers import books , archive
 
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -20,7 +20,7 @@ templates = Jinja2Templates(directory="templates")
 
 app.include_router(books.router, prefix="/books", tags=["books"])
 # app.include_router(movies.router, prefix="/movies", tags=["movies"])
-
+app.include_router(archive.router, prefix="/archive", tags=["archive"])
 @app.get("/", response_class=HTMLResponse)
 async def serve_home(request: Request):
     return templates.TemplateResponse("landing.html", {"request": request})
@@ -36,6 +36,10 @@ async def to_be_read_page(request: Request):
 @app.get("/to_be_read", response_class=HTMLResponse)
 async def to_be_read_page(request: Request):
     return templates.TemplateResponse("to_be_read.html", {"request": request, "books": books})
+
+@app.get("/archives", response_class=HTMLResponse)
+async def archives_page(request: Request):
+    return templates.TemplateResponse("archives.html", {"request": request, "books": books})
 
 # @app.get("/to_be_watched", response_class=HTMLResponse)
 # async def to_be_watched_page(request: Request):
